@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap");
 
 :root {
+    /* color variables */
   --color-primary-dark: rgb(100, 100, 100);
   --color-primary-dark-dark-light: rgb(60, 60, 60);
 
@@ -13,196 +14,231 @@
   --color-text: rgb(255, 255, 255);
 }
 
+
+/* applies to all elements */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 html {
-  font-size: 62.5%;
+    font-size: 62.5%;
 }
 body {
-  font-family: "Source Sans Pro", sans-serif;
-  height: 100vh;
-  min-height: 48rem;
-  width: 100vw;
-  min-width: 28rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(
-    160deg,
-    var(--color-primary-light-dark) 50%,
+    font-family: "Source Sans Pro", sans-serif;
+    height: 100vh;
+    min-height: 48rem;
+    width: 100vw;
+    min-width: 28rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(
+    160deg, 
+    var(--color-primary-light-dark) 50%, 
     var(--color-primary-dark-dark) 50%
-  );
+    );
 }
 
-/*___________Defaults Utility__________*/
+/* ___________Defaults Utility_____________ */
 .button {
-  font-weight: 500;
-  cursor: pointer;
-  border: none;
-  padding: 2rem 1rem;
-  background-color: var(--color-primary-dark);
-  color: var(--color-text);
-  font-size: 2rem;
-  border-radius: 0.2rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    padding: 2rem 1rem;
+    background-color: var(--color-primary-dark);
+    color: var(--color-text);
+    font-size: 2rem;
+    border-radius: 0.2rem;
 }
 .button:hover {
-  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
-  background-color: var(--color-primary-dark-light);
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
+    background-color: var(--color-primary-dark-light);
 }
 input {
-  outline: none;
-  border: none;
-  font-size: 4rem;
-  font-weight: 700;
+    outline: none;
+    border: none;
+    font-size: 3rem;
+    font-size: 700;
 }
-/*___________ Calculator Form __________*/
+
+/* __________________Calculator Form_____________________ */
 .calculator {
-  display: flex;
-  flex-direction: column;
-  width: 35rem;
-  margin: auto;
-  background-color: var(--color-primary-dark-dark);
-  border-radius: 1rem;
-  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.8);
-  overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 35rem;
+    margin: auto;
+    background-color: var(--color-primary-dark-dark);
+    border-radius: 1rem;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    z-index: 0;
 }
-
 .calculator input {
-  width: 100%;
-  background-color: var(--color-primary-dark-dark);
-  color: var(--color-text);
-  padding: 1rem;
-  text-align: right;
-  text-justify: center;
-  font-weight: 500;
+    width: 100%;
+    background-color: var(--color-primary-dark-dark);
+    color: var(--color-text);
+    padding: 1rem;
+    text-align: right;
+    font-weight: 500;
 }
-
 .calculator-button {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: repeat(5, max-content);
-  justify-content: space-around;
-  gap: 0.5rem;
+    opacity: 0;  /* was 1 */
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: repeat(5, max-content);
+    justify-content: space-around;
+    gap: 0.5rem;
+
+    transition: opacity 0.5s linear;
 }
 
 .calculator-button button:nth-last-child(2) {
-  grid-column: 1 / span 2;
+    grid-column: 1 / span 2;
 }
 .calculator-button button:nth-last-child(3) {
-  grid-column: 4;
-  height: 100%;
-  background-color: var(--color-primary-light-dark);
-  grid-row: 4 / span 2;
+    grid-column: 4;
+    height: 100%;
+    background-color: var(--color-primary-light-dark);
+    grid-row: 4 / span 2;
 }
 
 .orange:hover {
-  box-shadow: 1px 2px 4px rgba(0, 0, 0, 1);
-  background-color: var(--color-primary-light-light);
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 1);
+    background-color: var(--color-primary-light-light);
 }
-.oper-btn {
-  background-color: var(--color-primary-light-dark);
-  font-weight: 600;
-}
+/* .opr-btn {
+    background-color: var(--color-primary-light-dark);
+    font-weight: 600;
+} */
 
 .grey-dark {
-  background-color: var(--color-primary-dark-dark-light);
+    background-color: var(--color-primary-dark-dark-light);
 }
 .grey-dark:hover {
-  background-color: rgb(70, 70, 70);
+    background-color: rgb(70, 70, 70);
 }
 
 .design-close-exit {
-  width: 100%;
-  height: 3rem;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 1.5rem;
-  padding-left: 1.5rem;
+    width: 100%;
+    height: 3rem;
+    display: flex;
+    justify-content: flex-start;    /**/
+    align-items: center;
+    gap: 1.5rem;    /* grid gap (i.e. gap between grid columns  */
+    padding-left: 1.5rem;
 }
-
 .circle {
-  height: 1.5rem;
-  width: 1.5rem;
-  border-radius: 50%;
-  text-align: center;
-  font-size: 1.2rem;
-  font-weight: 700;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
 }
-
 .red {
-  background-color: rgb(241, 71, 71);
-  color: rgb(241, 71, 71);
+    background-color: rgb(241, 71, 71);
+    color: rgb(241, 71, 71);
 }
 .green {
-  background-color: rgb(29, 180, 29);
-  color: rgb(29, 180, 29);
+    background-color: rgb(29, 180, 29);
+    color: rgb(29, 180, 29);
 }
 .yellow {
-  background-color: rgb(250, 179, 46);
-  color: rgb(250, 179, 46);
+    background-color: rgb(250, 179, 46);
+    color: rgb(250, 179, 46);
 }
 
 .red:hover,
 .yellow:hover,
 .green:hover {
-  color: rgb(63, 63, 63);
+    color: rgb(63, 63, 63);
 }
 
-/*________________ Animation _____________*/
+/* to create a calculator OFF effect */
+#calculator-on-off {
+    position: fixed;
+    display: block;             /*was none*/
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+#calculator-on-off > div{
+    color: white;
+    font-size: 4vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.copyright {
+    position: absolute;
+    bottom: 10px;
+    color: white;
+    text-align: center;
+    font-size: 1.4rem;
+}
+/* __________________Animation_____________________ */
 .calculator {
-  transform: translate(-20vmin, 5vmin);
-  animation: calculator-appears 2s ease-in-out forwards;
+    transform: translate(-20vmin, 5vmin);
+    animation: calculator-appears 2s ease-in-out forwards;
 }
 
 @keyframes calculator-appears {
-  0% {
-  }
-  50% {
-    transform: translate(20vmin, -10vmin);
-  }
-  100% {
-    transform: translate(0);
-  }
+    0% {
+
+    }
+    50% {
+        transform: translate(20vmin, -10vmin);
+    }
+    100% {
+        transform: translate(0);
+    }
 }
 
 @media screen and (max-width: 768px) {
-  html {
-    font-size: 56%;
-  }
-  .calculator {
-    width: 30rem;
-  }
+    html {
+        font-size: 56%;
+    }
+    .calculator {
+        width: 30rem;
+    }
 }
 
 @media screen and (max-width: 500px) {
-  html {
-    font-size: 50%;
-  }
-  .calculator {
-    width: 25rem;
-  }
+    html {
+        font-size: 50%;
+    }
+    .calculator {
+        width: 25rem;
+    }
 }
 
 @media screen and (orientation: landscape) and (max-height: 700px) {
-  html {
-    font-size: 56%;
-  }
-  .calculator {
-    width: 30rem;
-  }
+    html {
+        font-size: 50%;
+    }
+    .calculator {
+        width: 30rem;
+    }
+    input {
+        font-size: 2rem;
+    }
 }
 
 @media screen and (orientation: landscape) and (max-height: 500px) {
-  html {
-    font-size: 50%;
-  }
-  .calculator {
-    width: 25rem;
-  }
+    html {
+        font-size: 50%;
+    }
+    .calculator {
+        width: 25rem;
+    }
 }
-
