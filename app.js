@@ -1,247 +1,183 @@
-const calculatorButtons = document.querySelector(".calculator-button");
+let formInput = document.getElementsByTagName('input')[0];
 
-const calculatorForm = document.querySelector(".calculator");
-const formInput = document.querySelector(".calculator input");
-// const formInputTextSize = getComputedStyle(formInput).fontSize;
+// function for AC button
+function eraseAll() {
+    formInput.value = "";
+    formInput.placeholder = '0';
+}
 
-function removeInvalidZeroBeforeDigit(expression) {
-    let expressionLength = expression.length;
-    if (!isValidWithZero(expression)) {
-        formInput.value = removeLastCharacter(expression);
+// function for DEL button
+function eraseLast() {
+    let inputFormValue = formInput.value;
+    // alert(inputFormValue);
+
+    // if multiple digits are present, remove the last one
+    if(inputFormValue.length > 1) {
+        let lastChar = inputFormValue.charAt(inputFormValue.length - 1);
+        // if last char is an empty space, that means an operator is there, 
+        // so remove 3 chars (space, operator, space)
+        if(lastChar == " ") {
+            inputFormValue = inputFormValue.substring(0, inputFormValue.length -3);
+        } else {
+            // otherwise there would be a digit, so remove one char only (the last digit)
+            inputFormValue = inputFormValue.substring(0, inputFormValue.length - 1);
+        }
+        formInput.value = inputFormValue;
+    } else if(inputFormValue.length == 1) {
+        // if only 1 digit is present, erase all
+        eraseAll();
+    }
+    // if already nothing written, then do nothing
+}
+
+// function for NUMBER buttons
+function insertDigit(e) {
+    let digit = e.getAttribute('value');
+    // alert(digit);
+    // if input box is empty, just write this digit
+    if(formInput.value == "") {
+        formInput.value = digit;
+    } else {  
+        // append the value
+        formInput.value = formInput.value + digit;
     }
 }
 
-// Function To Check For The Validity Of Zero 
-function isValidWithZero(expression) {
-    let expressionLength = expression.length;
-    if (expressionLength == 0) return true;
-    while (expressionLength-- > 0) {
-
-        //decimal means its valid we can place zero
-        if (expression[expressionLength] == '.') {
-            return true;
+// function for OPERATOR Buttons
+function insertOperator(e) {
+    let operator = e.getAttribute('value');
+    let lastChar = formInput.value.charAt(formInput.value.length -1);
+    // alert(lastChar);
+    // if input box is empty, you can't use an operator without an operand
+    if(formInput.value == "") {
+        alert("Please enter an operand first!");
+    } else if(lastChar == " ") {  
+        // since after every operator we give a space, so space means last i/p was operator
+        // so if already the last entered value was an operator, you cannot push an operator again
+        // like 3455 + (now another operator after plus will be invalid)
+        alert("Invalid input! \nCannot Enter an operator directly after another!");
+    } else {
+        // if last entered char is a decimal point like 234. 45. 
+        // then remove the decimal, it doesn't make any sense in such manner
+        if(lastChar == ".") {
+            eraseLast();
         }
-
-        //if we find not including zero we can place zero
-        if (expression[expressionLength] > '0' && expression[expressionLength] <= '9') {
-            return true;
-        }
-
-        //operators  2 case arises
-        if (isOperator(expression[expressionLength])) {
-            //1st case we didnt find number and decima means there will be zero here we cant place zero here invalid
-            if (expressionLength < expression.length - 1)
-                break;
-
-            //2nd case there is no zero previously present so only operator is present we can place zero here
-            return true;
-        }
-    }
-    return false;
-}
-
-// Removing The Last Character OF The Expression 
-function removeLastCharacter(formValue) {
-    const lengthOfValueOfInput = formValue.length;
-    const modifiedValue = formValue.slice(0, -1);
-    formInput.value = modifiedValue;
-    return formInput.value;
-}
-
-// Checking In The Expression That Already An Operator Exists Or Not
-function isOperator(expression) {
-    const lastCharacter = expression.slice(-1);
-    switch (lastCharacter) {
-        case "+": return true;
-        case "-": return true;
-        case "/": return true;
-        case "*": return true;
-        default: return false;
+        formInput.value = formInput.value + " ";
+        formInput.value = formInput.value + operator;
+        formInput.value = formInput.value + " ";
     }
 }
 
-/*Placing The Operator In The Expression Without Any Violation Of Mathematical Expression*/
-function placingOperator(operatorValue) {
-    let expression = formInput.value;
 
-    //When The Epression String Is Empty Then We Have To Place + And - Only
-    if (expression.length == 0) {
-        if (operatorValue == '*' || operatorValue == '/') {
-            formInput.value = "NaN";
-            return;
-        }
-        formInput.value = expression + operatorValue;
+// function for inserting DECIMAL (point)
+function insertDecimal() {
+    let lastChar = formInput.value.charAt(formInput.value.length - 1);
+    if(lastChar >= "0" && lastChar <= "9") {
+        formInput.value = formInput.value + ".";
+    } else {
+        alert("Invalid insertion of decimal point!");
+    }
+}
+
+// function to calculate final result
+function calculateResult() {
+    let inputData = formInput.value;
+    // if enter is processed without any data, then nothing to do ! 
+    if(inputData == "") {
+        alert("Nothing to process !");
+        return;
+    } else if(inputData.charAt(inputData.length - 1) == " ") {
+        /* since +, -, *, / are all binary operators, 
+           so last value should be a digit if not so, then error !
+        */
+        alert("Please enter an operand after last operator!");
         return;
     }
-
-    //When There Is No Operator In String Then We Have To Directly Place And Operator
-    if (!isOperator(expression)) {
-        formInput.value = expression + operatorValue;
-        return;
-    }
-
-    //When We Reapply Operator So We Avoid Placing The First Operator / * 
-    if (expression.length == 1) {
-        if (operatorValue == '*' || operatorValue == '/') {
-            formInput.value = "NaN";
-            return;
-        }
-    }
-
-    // Just Place The Operator By Removing The Previous Operator
-    let modifiedValue = removeLastCharacter(expression) + operatorValue;
-    formInput.value = modifiedValue;
-}
-
-//Checking Validity OF expression before evaluating
-function isExpressionCorrect(expression) {
-
-    // if there is operator at last index then invalid
-    if (isOperator(expression)) {
-        return false;
-    }
-    return true;
-}
-
-// Finding Decimal Present In The Expression Of Number Previously Or Not
-function isDecimal(expression) {
-    let expressionLength = expression.length;
-    while (expressionLength-- > 0) {
-        if (expression[expressionLength] == '.') {
-            return true;
-        }
-        if (isOperator(expression[expressionLength])) {
-            break;
-        }
-    }
-    return false;
-}
-
-function placingDecimal(expression) {
-    if (isDecimal(expression)) {
-        return;
-    }
-    if (expression.length == 0 || isOperator(expression))
-        expression += "0.";
-    else
-        expression += ".";
-
-    formInput.value = expression;
-}
-
-// ---------------------------------------------------------------
-// All Button Events For Operation Of Calculator
-calculatorButtons.addEventListener("click", (e) => {
-    /* calculatorButtons.addEventListener("click", function(e) {
-
-    });
+    
+    /* split the input from spaces; eg: 546 + 62 * 233.3 / 546
+       [546, +, 62, *, 233.3, /, 546]
     */
-    //Adoid Reloading Of The Webpage While Click On The Btton
-    e.preventDefault();
-    let targetButton = e.target.classList;
-    let expression = formInput.value;
-    // resizeExpressionLength(expression);
-    // if (formInput.value === "NaN" || formInput.value === "Infinity") {
-    //     formInput.value = "";
-    // }
+    let fields = inputData.split(" ");
+    // if there is no operator, only a number is there, then nothing to do
+    if(fields.length == 1) {
+        return;
+    }
 
-    //Numeric Buttons
-    if (targetButton.contains("num-btn")) {
-        if (e.target.value == '0') {
-            if (!isValidWithZero(expression))
+    // applying BODMAS to calculate result 
+    for(let i = 0; i < fields.length; ++i) {
+        if(fields[i] == "/") {
+            // if the divisor is 0, show error
+            if(fields[i+1] == "0") {
+                eraseAll();
+                formInput.placeholder = "Division By Zero Error!";
                 return;
+            }
+            let tmpResult = parseFloat(fields[i-1]) / parseFloat(fields[i+1]);
+
+            // remove the '/' operator and its operands
+            fields.splice(i-1, 3, tmpResult);  // remove from i-1, and remove 3 items in line
+            // continue the loop to find next division if any
         }
-        if (expression.length != 0) {
-            removeInvalidZeroBeforeDigit(expression);
+    }
+    // alert(result);
+    // alert(fields);
+    for(let i = 0; i < fields.length; ++i) {
+        if(fields[i] == "*") {
+            let tmpResult = parseFloat(fields[i-1]) * parseFloat(fields[i+1]);
+            
+            // remove the '/' operator and its operands and insert the result
+            fields.splice(i-1, 3, tmpResult);  
+            // continue the loop to find next division if any
         }
-        formInput.value += e.target.value;
-        return
     }
 
-    //Del Button For Removing The Last Digit
-    if (targetButton.contains("rem-digit-btn")) {
-        removeLastCharacter(expression);
-        return;
-    }
+    for(let i = 0; i < fields.length; ++i) {
+        if(fields[i] == "+") {
+            let tmpResult = parseFloat(fields[i-1]) + parseFloat(fields[i+1]);
 
-    //AC For Clearing The Input Screen
-    if (targetButton.contains("clear-btn")) {
-        formInput.value = "";
-        return;
-    }
-
-    //Operation Button Like + - / *
-    if (targetButton.contains("oper-btn")) {
-        placingOperator(e.target.value);
-        return;
-    }
-
-    //Decimal Button
-    if (targetButton.contains("decimal-btn")) {
-        placingDecimal(expression);
-        return;
-    }
-
-    //Calc Button 
-    if (targetButton.contains("calc-btn")) {
-        if (expression.length === 0) return;
-        if (!isExpressionCorrect(expression)) {
-            formInput.value = "NaN";
-            return;
+            // remove the '/' operator and its operands
+            fields.splice(i-1, 3, tmpResult);  // remove from i-1, and remove 3 items in line
+            // continue the loop to find next division if any
         }
-        formInput.value = +eval(expression).toFixed(6);
-        return;
     }
-});
 
+    for(let i = 0; i < fields.length; ++i) {
+        if(fields[i] == "-") {
+            let tmpResult = parseFloat(fields[i-1]) - parseFloat(fields[i+1]);
 
-const body = document.querySelector("body");
-
-body.addEventListener("keypress", (e) => {
-    let expression = formInput.value;
-    const targetKey = e.key;
-    // resizeExpressionLength(expression);
-    if (expression === "NaN" || expression === "Infinity") {
-        formInput.value = "";
-    }
-    if (Number.isInteger(+targetKey)) {
-        if (targetKey === 0) {
-            if (!isValidWithZero(expression))
-                return;
+            // remove the '/' operator and its operands
+            fields.splice(i-1, 3, tmpResult);  // remove from i-1, and remove 3 items in line
+            // continue the loop to find next division if any
         }
-        if (expression.length != 0) {
-            removeInvalidZeroBeforeDigit(expression);
-        }
-        formInput.value += targetKey;
-        return;
     }
-    if (isOperator(targetKey)) {
-        placingOperator(targetKey);
-        return;
-    }
-    //Decimal Button
-    if (targetKey === ".") {
-        placingDecimal(expression);
-        return;
-    }
+    //only one element will remain in fields[] array at last, and that would be final ans
+    // alert(fields[0]);
+    formInput.value = fields[0];
+}
 
-    //Calc Button 
-    if (targetKey === "=") {
-        if (expression.length === 0) return;
-        if (!isExpressionCorrect(expression)) {
-            formInput.value = "NaN";
-            return;
-        }
-        formInput.value = +eval(expression).toFixed(6);
-        return;
-    }
-});
+// ---------------------JS for improving dynamic design of calculator-----------------------------
+let calculatorButtons = document.getElementsByClassName("calculator-button")[0];
+function closeCalculator() {
+    calculatorButtons.style.opacity = "0";
+    let overlay = document.getElementById("calculator-on-off");
+    overlay.style.display = "block";
+    formInput.placeholder = "";
+}
 
-body.addEventListener("keydown", (e) => {
-    const targetKey = e.key;
-    let expression = formInput.value;
-    if (targetKey === "Backspace") {
-        removeLastCharacter(expression);
-        return;
-    }
-});
+function launchCalculator() {
+    calculatorButtons.style.opacity = "1";
+    let overlay = document.getElementById("calculator-on-off");
+    overlay.style.display = "none";
+    formInput.placeholder = "0";
+}
+
+function minimizeCalculator() {
+    calculatorButtons.style.display = "none";
+    formInput.placeholder = "";
+    formInput.value = "";
+}
+
+function maximizeCalculator() {
+    calculatorButtons.style.display = "grid";
+    formInput.placeholder = "0";
+}
