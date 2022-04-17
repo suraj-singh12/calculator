@@ -1,2 +1,2 @@
 # calculator
-This is a calculator made using HTML, CSS,  JS
+This is a calculator made from scratch using HTML, CSS,  JS.
