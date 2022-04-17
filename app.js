@@ -161,6 +161,7 @@ function closeCalculator() {
     calculatorButtons.style.opacity = "0";
     let overlay = document.getElementById("calculator-on-off");
     overlay.style.display = "block";
+    formInput.value = "";
     formInput.placeholder = "";
 }
 
