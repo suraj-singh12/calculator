@@ -188,7 +188,8 @@ input {
 }
 /* __________________Animation_____________________ */
 .calculator {
-    transform: translate(-20vmin, 5vmin);
+    transform: translate(-20vmin, 5vmin);  
+    /* vmin: min between viewport's height or width, whichsoever is small. */
     animation: calculator-appears 2s ease-in-out forwards;
 }
 
